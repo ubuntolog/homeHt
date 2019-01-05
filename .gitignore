@@ -16,7 +16,7 @@ nbactions.xml 
 #macOS
 .DS_Store
 
-bundle.js
-bundle.js.map
+homeHt-bundle.js
+homeHt-bundle.js.map
 src/main/resources/frontend/webui/app/lib/
 src/main/resources/frontend/webui/node_modules/
