@@ -59,7 +59,7 @@ class Frame extends React.Component {
                     <Well bsSize="large">
                         <Row style={{margin:5}}>  
                             <Col xs={2} sm={2} md={2} lg={2}> 
-                                <Image src="images/house.svg" responsive />
+                                <Image src="/images/house.svg" responsive />
                             </Col>    
                             <Col xs={10} sm={10} md={10} lg={10}>
                                 <h2>Application form for tenants</h2>

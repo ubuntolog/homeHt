@@ -1,6 +1,7 @@
 const urlRoot = window.APP_CONTEXT_PATH ; // window.location.origin;
+const apiPrefix = "api";
 
 export const apiNames = {
-    apiinfo:   `${urlRoot}/info`,
-    user:      `${urlRoot}/user`,
+    apiinfo:   `${urlRoot}/${apiPrefix}/info`,
+    user:      `${urlRoot}/${apiPrefix}/booking`,
 };
