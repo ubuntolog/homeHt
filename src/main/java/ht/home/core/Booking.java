@@ -10,7 +10,7 @@ public class Booking {
     public Integer salary;
     public Integer age;
     public Integer pets;
-    public Integer tenantNum;
+    public Integer tenantsNum;
     public Integer space;
     public Integer floor;
     public Integer roomsNum;
@@ -20,7 +20,7 @@ public class Booking {
         // Needed by Jackson deserialization
     }
 
-    public Booking(Integer id, String name, String email, String phone, Integer salary, Integer age, Integer pets, Integer tenantNum, Integer space, Integer floor, Integer roomsNum, Integer rentPeriod) {
+    public Booking(Integer id, String name, String email, String phone, Integer salary, Integer age, Integer pets, Integer tenantsNum, Integer space, Integer floor, Integer roomsNum, Integer rentPeriod) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -28,7 +28,7 @@ public class Booking {
         this.salary = salary;
         this.age = age;
         this.pets = pets;
-        this.tenantNum = tenantNum;
+        this.tenantsNum = tenantsNum;
         this.space = space;
         this.floor = floor;
         this.roomsNum = roomsNum;
@@ -69,8 +69,8 @@ public class Booking {
     }
 
     @JsonProperty
-    public Integer getTenantNum() {
-        return tenantNum;
+    public Integer getTenantsNum() {
+        return tenantsNum;
     }
 
     @JsonProperty

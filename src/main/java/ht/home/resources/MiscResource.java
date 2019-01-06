@@ -1,6 +1,7 @@
 package ht.home.resources;
 
 import ht.home.HomeHtBackendConfiguration;
+import ht.home.core.Booking;
 import ht.home.core.Database;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("")
@@ -36,14 +38,33 @@ public class MiscResource {
     }
 
     @GET
+    @Path("/booking")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getAllBookings() throws SQLException {
+        Database db = new Database(config);
+        LOGGER.info("All bookings were requested");
+
+        List<Booking> foundBookings = db.selectBooking();
+        if (foundBookings.size()>0) {
+            return Response.ok(foundBookings).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("There are no bookings found").build();
+        }
+    }
+
+    @GET
     @Path("/booking/{id}")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getBooking(@PathParam("id") String id) throws SQLException {
-
+    public Response getBooking(@PathParam("id") Integer id) throws SQLException {
         Database db = new Database(config);
-        db.Create();
-        LOGGER.info("Booking was requested", id);
-        return Response.ok().build();
+        LOGGER.info("Booking was requested");
+
+        List<Booking> foundBookings = db.selectBooking(id);
+        if (foundBookings.size()>0) {
+            return Response.ok(foundBookings).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("The booking was not found").build();
+        }
     }
 
     @POST

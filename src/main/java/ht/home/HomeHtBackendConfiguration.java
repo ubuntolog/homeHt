@@ -11,6 +11,8 @@ public class HomeHtBackendConfiguration extends Configuration {
     @NotNull
     private String version;
     private String dbFolder;
+    private String dbUser;
+    private String dbPassword;
 
     @JsonProperty("version")
     public String getVersion() {
@@ -20,5 +22,15 @@ public class HomeHtBackendConfiguration extends Configuration {
     @JsonProperty("dbFolder")
     public String getDbFolder() {
         return dbFolder;
+    }
+
+    @JsonProperty("dbUser")
+    public String getDbUser() {
+        return dbUser;
+    }
+
+    @JsonProperty("dbPassword")
+    public String getDbPassword() {
+        return dbPassword;
     }
 }
