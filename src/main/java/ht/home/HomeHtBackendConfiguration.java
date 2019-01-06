@@ -10,9 +10,15 @@ public class HomeHtBackendConfiguration extends Configuration {
     @Valid
     @NotNull
     private String version;
+    private String dbFolder;
 
     @JsonProperty("version")
     public String getVersion() {
         return version;
+    }
+
+    @JsonProperty("dbFolder")
+    public String getDbFolder() {
+        return dbFolder;
     }
 }

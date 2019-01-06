@@ -40,7 +40,7 @@ public class MiscResource {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getBooking(@PathParam("id") String id) throws SQLException {
 
-        Database db = new Database();
+        Database db = new Database(config);
         db.Create();
         LOGGER.info("Booking was requested", id);
         return Response.ok().build();
