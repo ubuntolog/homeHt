@@ -6,9 +6,7 @@ import ht.home.core.Database;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -32,6 +30,7 @@ public class MiscResource {
     public Response getApiInfo() {
         Map map = new HashMap<String, Object>() {{
             this.put("version", config.getVersion());
+            this.put("author", "Alexandr Chernov");
         }};
         LOGGER.info("API info was requested");
         return Response.ok(map).build();
@@ -71,12 +70,17 @@ public class MiscResource {
     @Path("/booking")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response makeBooking(@FormDataParam("firstName") final String firstName,
-                                   @FormDataParam("lastName") final String lastName,
+    public Response makeBooking(@FormDataParam("name") final String name,
                                    @FormDataParam("email") final String email,
                                    @FormDataParam("phone") final String phone,
                                    @FormDataParam("salary") final Integer salary,
-                                   @Context HttpServletRequest request) {
+                                   @FormDataParam("age") final Integer age,
+                                   @FormDataParam("pets") final boolean pets,
+                                   @FormDataParam("tenantsNum") final Integer tenantsNum,
+                                   @FormDataParam("space") final Integer space,
+                                   @FormDataParam("floor") final Integer floor,
+                                   @FormDataParam("roomsNum") final Integer roomsNum,
+                                   @FormDataParam("rentPeriod") final Integer rentPeriod) {
 
         LOGGER.info("Trying to add a booking");
         return Response.ok().build();

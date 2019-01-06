@@ -33,15 +33,15 @@ export function fetchApiInfo() {
     }
 }
 
-export function fetchVisitors() {
+export function fetchBookings() {
     return function (dispatch, getState) {
-        axios.get(apiNames.user).then(response => {
+        axios.get(apiNames.booking).then(response => {
             dispatch({
-                type: actionTypes.FETCH_VISITORS_SUCCESS,
-                visitors: response.data
+                type: actionTypes.FETCH_BOOKINGS_SUCCESS,
+                bookings: response.data
             });
         }).catch(err => {
-            errHandler("Could not retrieve the list of visitors")(err);
+            errHandler("Could not retrieve the list of bookings")(err);
         });
     }
 }
@@ -60,19 +60,27 @@ function registrationSubmissionError(registration) {
     }
 }
 
-export function submitRegistration(name, password, address, email, phone) {
+export function submitRegistration(name, email, phone, salary, age, pets, tenantsNum, space, floor, roomsNum, rentPeriod) {
+    console.log(name, email, phone, salary, age, pets, tenantsNum, space, floor, roomsNum, rentPeriod);
     return function (dispatch, getState)  {
         const fd = new FormData();
         fd.append("name", name);
-        fd.append("password", password);
-        fd.append("address", address);
         fd.append("email", email);
         fd.append("phone", phone);
-        axios.post(apiNames.user, fd).then(response => {
+        fd.append("salary", salary);
+        fd.append("age", age);
+        fd.append("pets", pets);
+        fd.append("tenantsNum", tenantsNum);
+        fd.append("space", space);
+        fd.append("floor", floor);
+        fd.append("roomsNum", roomsNum);
+        fd.append("rentPeriod", rentPeriod);
+
+        axios.post(apiNames.booking, fd).then(response => {
             dispatch(registrationSubmissionSuccess(response.data));
             Alert.success("You have successfully registered");            
         }).catch(err => {
-            errHandler("Please check the form data")(err);
+            errHandler("There has been an error. Consider checking the form data")(err);
             dispatch(registrationSubmissionError(err.response.data));
         })
     }

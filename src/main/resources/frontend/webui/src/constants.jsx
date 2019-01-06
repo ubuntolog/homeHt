@@ -3,5 +3,5 @@ const apiPrefix = "api";
 
 export const apiNames = {
     apiinfo:   `${urlRoot}/${apiPrefix}/info`,
-    user:      `${urlRoot}/${apiPrefix}/booking`,
+    booking:   `${urlRoot}/${apiPrefix}/booking`,
 };
