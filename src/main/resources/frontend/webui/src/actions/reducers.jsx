@@ -13,6 +13,15 @@ function apiinfo(state = SI({}), action) {
     }
 }
 
+function validation(state = SI({}), action) {
+    switch (action.type) {
+        case actionTypes.VALIDATE_FORM_SUCCESS:
+            return SI(action.validation);
+        default:
+            return state;
+    }
+}
+
 function bookings(state = SI([]), action) {
     switch (action.type) {
         case actionTypes.FETCH_BOOKINGS_SUCCESS:
@@ -25,6 +34,7 @@ function bookings(state = SI([]), action) {
 const rootReducer = combineReducers({
     apiinfo,
     bookings,
+    validation,
 
     form: formReducer,
     routing: routerReducer

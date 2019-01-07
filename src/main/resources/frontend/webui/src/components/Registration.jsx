@@ -23,12 +23,49 @@ class Registration extends React.Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handlePetsCheckbox = this.handlePetsCheckbox.bind(this);
+        this.handleValidation = this.handleValidation.bind(this);
 
         this.state = {
             key: 1,
             show: false,
             hasPets: false
         };
+    }
+
+    validateEmail(email) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            return true;
+        }
+        return false;
+    }
+
+    validatePhoneNumber(phone) {       
+        // +XX-XXX-XXXXXXXX
+        // +XX.XXX.XXXXXXXX
+        // +XX XXX XXXXXXXX 
+        if (phone.match(/^\+?([0-9]{2})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{8})$/)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    validateAge(age) {    
+        // 18 - 125
+        if (age.match(/^(12[0-5]|1[01][0-9]|[4-9][0-9]|1[8-9])$/)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    validateTenantsNum(num) {    
+        // 7 max
+        if (num.match(/^(7|[1-7]?)$/)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     handleSelect(key) {
@@ -73,30 +110,88 @@ class Registration extends React.Component {
         this.props.actions.fetchBookings();
     }
 
-    componentDidMount() {
-        this.props.actions.fetchBookings();
+    handleValidation(e) {
+        let validation = {};
+        validation[e.target.name] = {};
+        validation[e.target.name]["state"] = null;
+        validation[e.target.name]["message"] = "";
         
+        if (e.target.name == formFields[0]) {
+            if (e.target.value.length == 0) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "Name cannot be empty";
+            } else {
+                validation[e.target.name]["state"] = "success";
+            }            
+        }
+
+        if (e.target.name == formFields[1]) {
+            if (e.target.value.length == 0) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "Email address cannot be empty";
+            } else if (!this.validateEmail(e.target.value)) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "Email is not valid, please check it";
+            } else {
+                validation[e.target.name]["state"] = "success";
+            }          
+        }
+
+        if (e.target.name == formFields[2]) {
+            if (e.target.value.length == 0) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "You did not enter your phone number";
+            } else if (!this.validatePhoneNumber(e.target.value)) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "Your phone number is not correct. It should be like +XX-XXX-XXXXXXXX";
+            } else {
+                validation[e.target.name]["state"] = "success";
+            }            
+        }
+
+        if (e.target.name == formFields[4]) {
+            if (e.target.value.length == 0) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "You did not enter your age";
+            } else if (!this.validateAge(e.target.value)) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "Age should be a reasonable number between 18 and 125";
+            } else {
+                validation[e.target.name]["state"] = "success";
+            }            
+        }
+
+        if (e.target.name == formFields[6]) {
+            if (e.target.value.length == 0) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "You did not enter the number of tenants";
+            } else if (!this.validateTenantsNum(e.target.value)) {
+                validation[e.target.name]["state"] = "error";
+                validation[e.target.name]["message"] = "The number should be at least 1 and no more than 7";
+            } else {
+                validation[e.target.name]["state"] = "success";
+            }            
+        }
+
+        this.props.actions.validateForm(validation);
+    }
+
+    componentDidMount() {
+        this.props.actions.fetchBookings();        
     }
 
     render() {
-        // console.log(this.state.validationStatus);
-       
-        let validationStatus = {}
+        let validation = (this.props.validation ? this.props.validation : {});
+      
+        let validationStatus = {};
         for (let field of formFields) {
-            validationStatus[field] = {};
-            validationStatus[field]["state"] = null;
-            validationStatus[field]["message"] = "";
-
-            // if (registration.errors) {
-            //     if (registration.errors[field]) {
-            //         validationStatus[field]["state"] = "error";
-            //         validationStatus[field]["message"] = registration.errors[field].join(". ");
-            //     }
-            // } else {
-            //     if (Object.keys(registration).length > 0) {
-            //         validationStatus[field]["state"] = "success";
-            //     }
-            // }  
+            if (!(field in validation)) {
+                validationStatus[field] = {};
+                validationStatus[field]["state"] = null;
+                validationStatus[field]["message"] = "";
+            } else {
+                validationStatus[field] = validation[field];
+            }
         }
         return(
                 <div>
@@ -111,11 +206,12 @@ class Registration extends React.Component {
                                 controlId="nameGroup"
                                 validationState={validationStatus[formFields[0]]["state"]}
                             >
-                                <ControlLabel>Name</ControlLabel>
+                                <ControlLabel>Name*</ControlLabel>
                                 <FormControl
                                     type="text"
                                     placeholder="Enter your name"
-                                    name={formFields[0]}                                        
+                                    name={formFields[0]}
+                                    onChange={this.handleValidation}                                   
                                 />
                                 <FormControl.Feedback />
                                 <HelpBlock>{validationStatus[formFields[0]]["message"]}</HelpBlock>
@@ -125,11 +221,12 @@ class Registration extends React.Component {
                                 controlId="emailGroup"
                                 validationState={validationStatus[formFields[1]]["state"]}
                             >
-                                <ControlLabel>Email</ControlLabel>
+                                <ControlLabel>Email*</ControlLabel>
                                 <FormControl
                                     type="text"
                                     placeholder="Enter your email address"
                                     name={formFields[1]} 
+                                    onChange={this.handleValidation} 
                                 />
                                 <FormControl.Feedback />
                                 <HelpBlock>{validationStatus[formFields[1]]["message"]}</HelpBlock>
@@ -139,11 +236,12 @@ class Registration extends React.Component {
                                 controlId="phoneGroup"
                                 validationState={validationStatus[formFields[2]]["state"]}
                             >
-                                <ControlLabel>Phone number</ControlLabel>
+                                <ControlLabel>Phone number*</ControlLabel>
                                 <FormControl
                                     type="text"
                                     placeholder="Enter your phone number"
-                                    name={formFields[2]}                                       
+                                    name={formFields[2]}
+                                    onChange={this.handleValidation}                                        
                                 />
                                 <FormControl.Feedback />
                                 <HelpBlock>{validationStatus[formFields[2]]["message"]}</HelpBlock>
@@ -179,11 +277,12 @@ class Registration extends React.Component {
                                 controlId="ageGroup"
                                 validationState={validationStatus[formFields[4]]["state"]}
                             >
-                                <ControlLabel>Age</ControlLabel>
+                                <ControlLabel>Age*</ControlLabel>
                                 <FormControl
                                     type="text"
                                     placeholder="Enter your age"
-                                    name={formFields[4]}                                       
+                                    name={formFields[4]} 
+                                    onChange={this.handleValidation}                                      
                                 />
                                 <FormControl.Feedback />
                                 <HelpBlock>{validationStatus[formFields[4]]["message"]}</HelpBlock>
@@ -207,11 +306,12 @@ class Registration extends React.Component {
                                 controlId="tenantsNumGroup"
                                 validationState={validationStatus[formFields[6]]["state"]}
                             >
-                                <ControlLabel>Number of tenants</ControlLabel>
+                                <ControlLabel>Number of tenants*</ControlLabel>
                                 <FormControl
                                     type="text"
                                     placeholder="Enter the number of tenants"
-                                    name={formFields[6]}                                       
+                                    name={formFields[6]}
+                                    onChange={this.handleValidation}                                      
                                 />
                                 <FormControl.Feedback />
                                 <HelpBlock>{validationStatus[formFields[6]]["message"]}</HelpBlock>
@@ -273,6 +373,7 @@ class Registration extends React.Component {
                                 <HelpBlock>{validationStatus[formFields[10]]["message"]}</HelpBlock>
                             </FormGroup>
 
+                            <p>* this field cannot be empty</p>
                             <ButtonToolbar>
                                 <Button type="submit">Register</Button>
                                 <Button title="Get help" onClick={this.handleShow}>
@@ -321,6 +422,7 @@ class Registration extends React.Component {
 
 Registration.propTypes = {
     apiinfo: PropTypes.object.isRequired,
+    validation: PropTypes.object.isRequired,
     bookings: PropTypes.array.isRequired
 };
 

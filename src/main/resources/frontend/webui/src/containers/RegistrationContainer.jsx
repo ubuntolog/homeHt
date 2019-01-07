@@ -6,7 +6,8 @@ import * as actions from '../actions/actions';
 const mapStateToProps = (state) => {
     return {
         apiinfo: state.apiinfo,
-        bookings: state.bookings
+        bookings: state.bookings,
+        validation: state.validation
     };
 };
 

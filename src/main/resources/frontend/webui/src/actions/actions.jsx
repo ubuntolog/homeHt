@@ -85,3 +85,10 @@ export function submitRegistration(name, email, phone, salary, age, pets, tenant
         })
     }
 }
+
+export function validateForm(validation) {
+    return {
+        type: actionTypes.VALIDATE_FORM_SUCCESS,
+        validation: validation
+    }
+}
